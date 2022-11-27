@@ -1,14 +1,24 @@
-interface LandingPageProps {
-  onCreateClick: () => void;
-  onJoinClick: () => void;
-  setDesiredRoomString: (arg0: string) => void;
-}
+import { useState, useContext } from "react";
+import { SocketContext } from "../SocketContext/socket";
 
-export default function LandingPage({
-  onCreateClick,
-  onJoinClick,
-  setDesiredRoomString,
-}: LandingPageProps) {
+export const LandingPage = () => {
+  // Socket
+  const socket = useContext(SocketContext);
+
+  // Input box state
+  const [desiredRoomString, setDesiredRoomString] = useState("");
+
+  // User actions
+  const onCreateClick = () => {
+    socket.emit("create_room");
+  };
+
+  const onJoinClick = () => {
+    if (desiredRoomString !== "") {
+      socket.emit("join_room", desiredRoomString);
+    }
+  };
+
   return (
     <div className="App">
       <div>
@@ -26,4 +36,4 @@ export default function LandingPage({
       </div>
     </div>
   );
-}
+};

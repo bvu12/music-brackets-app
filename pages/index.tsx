@@ -1,13 +1,12 @@
 // SOURCE: https://github.com/machadop1407/socket-io-react-example/
-import { io } from "socket.io-client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Modal, Button, Group, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { SocketContext } from "../components/SocketContext/socket";
 
 import { Player } from "../shared/types";
-import LandingPage from "../components/LandingPage/LandingPage";
-
-const socket = io("http://localhost:3000");
+import { LandingPage } from "../components/LandingPage/LandingPage";
+// import { Lobby } from "../components/Lobby/Lobby";
 
 function getRoomIdFromString(message: string): string {
   let roomId = message.match(/'(.*?)'/g);
@@ -19,14 +18,14 @@ function getRoomIdFromString(message: string): string {
 }
 
 export default function Home() {
+  // Socket
+  const socket = useContext(SocketContext);
+
   //Room State
   const [room, setRoom] = useState<string>("");
   const [isInRoom, setIsInRoom] = useState<boolean>(false);
   const [isRoomOwner, setIsRoomOwner] = useState<boolean>(false);
   const [players, setPlayers] = useState<Player[]>([]);
-
-  // Input box states
-  const [desiredRoomString, setDesiredRoomString] = useState("");
 
   // Modal states
   const [opened, setOpened] = useState(false);
@@ -49,15 +48,6 @@ export default function Home() {
   }
 
   // Socket responses
-  const createRoom = () => {
-    socket.emit("create_room");
-  };
-  const joinRoom = () => {
-    if (desiredRoomString !== "") {
-      socket.emit("join_room", desiredRoomString);
-    }
-  };
-
   const pauseTimer = () => {
     socket.emit("pause_timer");
   };
@@ -143,10 +133,6 @@ export default function Home() {
       })}
     </div>
   ) : (
-    <LandingPage
-      onCreateClick={createRoom}
-      onJoinClick={joinRoom}
-      setDesiredRoomString={setDesiredRoomString}
-    />
+    <LandingPage />
   );
 }
