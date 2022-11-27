@@ -5,6 +5,7 @@ import { Modal, Button, Group, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 
 import { Player } from "../shared/types";
+import LandingPage from "../components/LandingPage/LandingPage";
 
 const socket = io("http://localhost:3000");
 
@@ -25,7 +26,7 @@ export default function Home() {
   const [players, setPlayers] = useState<Player[]>([]);
 
   // Input box states
-  const [desiredRoomString, setdesiredRoomString] = useState("");
+  const [desiredRoomString, setDesiredRoomString] = useState("");
 
   // Modal states
   const [opened, setOpened] = useState(false);
@@ -142,20 +143,10 @@ export default function Home() {
       })}
     </div>
   ) : (
-    <div className="App">
-      <div>
-        <div>Create a room</div>
-        <button onClick={createRoom}> Create room</button>
-      </div>
-      <div>
-        <input
-          placeholder="Enter a room number..."
-          onChange={(event) => {
-            setdesiredRoomString(event.target.value);
-          }}
-        />
-        <button onClick={joinRoom}> Join room</button>
-      </div>
-    </div>
+    <LandingPage
+      onCreateClick={createRoom}
+      onJoinClick={joinRoom}
+      setDesiredRoomString={setDesiredRoomString}
+    />
   );
 }
