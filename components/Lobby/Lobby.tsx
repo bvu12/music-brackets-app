@@ -1,9 +1,8 @@
 import { useState, useEffect, useContext } from "react";
 import { SocketContext } from "../SocketContext/socket";
-import { Modal, Button, Group, TextInput } from "@mantine/core";
-import { useForm } from "@mantine/form";
 
 import { Player } from "../../shared/types";
+import { RenameUser } from "./RenameUser/RenameUser";
 
 interface LobbyProps {
   roomName: string;
@@ -13,18 +12,6 @@ interface LobbyProps {
 
 export const Lobby = ({ roomName, isRoomOwner, players }: LobbyProps) => {
   const socket = useContext(SocketContext);
-
-  // Modal states
-  const [opened, setOpened] = useState(false);
-  const form = useForm({
-    initialValues: {
-      username: "",
-    },
-
-    // validate: {
-    //   email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
-    // },
-  });
 
   // Timer
   const [timer, setTimer] = useState(0);
@@ -72,33 +59,7 @@ export const Lobby = ({ roomName, isRoomOwner, players }: LobbyProps) => {
       <button onClick={stopTimer}> Stop timer</button>
       {players.map((player: Player) => {
         return socket.id === player.playerSocketId ? (
-          <div>
-            <Modal
-              opened={opened}
-              onClose={() => setOpened(false)}
-              title="Introduce yourself!"
-            >
-              <form
-                onSubmit={form.onSubmit((values) => {
-                  socket.emit("set_username", values.username);
-                  setOpened(false);
-                })}
-              >
-                <TextInput
-                  withAsterisk
-                  label="Enter your username!"
-                  placeholder="Username"
-                  data-autoFocus
-                  {...form.getInputProps("username")}
-                />
-                <Group position="right" mt="md">
-                  <Button type="submit">Submit</Button>
-                </Group>
-              </form>
-            </Modal>
-            <Button onClick={() => setOpened(true)}>Open Modal</Button>
-            <h2 key="playerSocketId"> {player.username} </h2>
-          </div>
+          <RenameUser username={player.username} />
         ) : (
           <div key="playerSocketId"> {player.username} </div>
         );
