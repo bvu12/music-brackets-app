@@ -54,6 +54,8 @@ export function startCountdownTimer(
   duration: number
 ) {
   const room = roomService.findRoomBySocket(rooms, socket);
+  const interval = 100; // ms
+
   if (room) {
     var timerId = setInterval(
       function () {
@@ -62,10 +64,10 @@ export function startCountdownTimer(
           .in(roomService.getRoomId(socket))
           .emit("timer-countdown", duration);
 
-        duration -= 1;
+        duration -= interval / 1000;
         room.currentTime = duration;
       },
-      1000,
+      interval,
       duration
     );
     room.timerId = timerId;

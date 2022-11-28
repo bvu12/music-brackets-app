@@ -1,8 +1,7 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useContext } from "react";
 import { Modal, Button, Group, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { SocketContext } from "../../SocketContext/socket";
-SocketContext;
 
 interface RenameUserProps {
   username: string;
@@ -18,9 +17,12 @@ export const RenameUser = ({ username }: RenameUserProps) => {
       username: "",
     },
 
-    // validate: {
-    //   email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
-    // },
+    validate: {
+      username: (value) =>
+        value.length > 10 || value.length < 3
+          ? "Username must be between 3 and 10 characters"
+          : null,
+    },
   });
 
   const _renameUser = (newUsername: string) => {
@@ -52,7 +54,7 @@ export const RenameUser = ({ username }: RenameUserProps) => {
           </Group>
         </form>
       </Modal>
-      <Button onClick={() => setOpened(true)}>Open Modal</Button>
+      <Button onClick={() => setOpened(true)}>Edit name</Button>
       <h2 key="playerSocketId"> {username} </h2>
     </div>
   );
