@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { NewReleases } from "../../shared/types";
-import { CreateOrJoinRoom } from "./components/CreateOrJoinRoom";
-import { SpotifyBannerNewReleases } from "./components/SpotifyBannerNewReleases";
+import { CreateOrJoinRoom } from "./CreateOrJoinRoom/CreateOrJoinRoom";
+import { SpotifyBannerNewReleases } from "./SpotifyBannerNewReleases/SpotifyBannerNewReleases";
 
 async function getNewReleases() {
   const res = await fetch("/api/fake_get_new_releases");

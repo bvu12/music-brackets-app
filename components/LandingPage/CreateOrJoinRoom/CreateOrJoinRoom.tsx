@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext } from "react";
 import { SocketContext } from "../../SocketContext/socket";
 
 import {
@@ -11,7 +11,7 @@ import {
   Button,
 } from "@mantine/core";
 import { IconSun, IconMoon } from "@tabler/icons";
-import { JoinRoom } from "./JoinRoom";
+import { JoinRoom } from "../JoinRoom/JoinRoom";
 
 export const CreateOrJoinRoom = () => {
   // Socket
