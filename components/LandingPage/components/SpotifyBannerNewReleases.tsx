@@ -6,6 +6,7 @@ import {
   Text,
   Title,
   useMantineTheme,
+  Button,
 } from "@mantine/core";
 
 import { NewReleases } from "../../../shared/types";
@@ -38,13 +39,17 @@ const useStyles = createStyles((theme) => ({
     lineHeight: 1.2,
     fontSize: 32,
     marginTop: theme.spacing.xs,
+    backgroundColor: "rgba(0,0,0,0.25)",
   },
 
   category: {
-    color: theme.white,
+    color: "red",
     opacity: 0.7,
-    fontWeight: 700,
+    fontWeight: 900,
+    fontSize: 22,
     textTransform: "uppercase",
+    width: "100%",
+    textAlign: "end",
   },
 }));
 
@@ -60,13 +65,9 @@ function Card({ image, title, category }: CardProps) {
       className={classes.card}
     >
       <div>
-        <Text className={classes.category} size="xs">
-          {category}
-        </Text>
-        <Title order={3} className={classes.title}>
-          {title}
-        </Title>
+        <Title className={classes.title}>{title}</Title>{" "}
       </div>
+      <Text className={classes.category}>{category}</Text>
     </Paper>
   );
 }
