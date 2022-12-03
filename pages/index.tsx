@@ -1,7 +1,5 @@
 // SOURCE: https://github.com/machadop1407/socket-io-react-example/
 import { useEffect, useState, useContext } from "react";
-import { Modal, Button, Group, TextInput } from "@mantine/core";
-import { useForm } from "@mantine/form";
 import { SocketContext } from "../components/SocketContext/socket";
 
 import { Player } from "../shared/types";
