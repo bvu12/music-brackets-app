@@ -1,11 +1,15 @@
 // GET https://api.spotify.com/v1/browse/new-releases
 import type { NextApiRequest, NextApiResponse } from "next";
+import { NewReleases } from "../../shared/types";
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+export default function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<NewReleases>
+) {
   res.status(200).json(new_releases);
 }
 
-const new_releases = {
+const new_releases: NewReleases = {
   albums: {
     href: "https://api.spotify.com/v1/browse/new-releases?country=CA&offset=0&limit=20",
     items: [

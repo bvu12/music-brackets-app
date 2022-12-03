@@ -1,39 +1,34 @@
-import { useState, useContext } from "react";
-import { SocketContext } from "../SocketContext/socket";
+import { useState, useEffect } from "react";
+import { NewReleases } from "../../shared/types";
+import { CreateOrJoinRoom } from "./components/CreateOrJoinRoom";
+import { SpotifyBannerNewReleases } from "./components/SpotifyBannerNewReleases";
+
+async function getNewReleases() {
+  const res = await fetch("/api/fake_get_new_releases");
+
+  // Recommendation: handle errors
+  if (!res.ok) {
+    // This will activate the closest `error.js` Error Boundary
+    throw new Error("Failed to fetch data");
+  }
+
+  return res.json();
+}
 
 export const LandingPage = () => {
-  // Socket
-  const socket = useContext(SocketContext);
+  const [newReleases, setNewReleases] = useState<NewReleases>();
 
-  // Input box state
-  const [desiredRoomString, setDesiredRoomString] = useState("");
-
-  // User actions
-  const onCreateClick = () => {
-    socket.emit("create_room");
-  };
-
-  const onJoinClick = () => {
-    if (desiredRoomString !== "") {
-      socket.emit("join_room", desiredRoomString);
-    }
-  };
+  // After initial rendering
+  useEffect(() => {
+    getNewReleases().then((releases: NewReleases) => {
+      setNewReleases(releases);
+    });
+  }, []);
 
   return (
-    <div className="App">
-      <div>
-        <div>Create a room</div>
-        <button onClick={onCreateClick}> Create room</button>
-      </div>
-      <div>
-        <input
-          placeholder="Enter a room number..."
-          onChange={(event) => {
-            setDesiredRoomString(event.target.value);
-          }}
-        />
-        <button onClick={onJoinClick}> Join room</button>
-      </div>
+    <div>
+      <SpotifyBannerNewReleases newReleases={newReleases} />
+      <CreateOrJoinRoom />
     </div>
   );
 };
