@@ -97,17 +97,23 @@ export const SpotifyBannerNewReleases = ({
   });
 
   return (
-    <Carousel
-      slideSize="350px"
-      breakpoints={[{ maxWidth: "sm", slideSize: "100%", slideGap: "lg" }]}
-      slideGap="xl"
-      align="start"
-      slidesToScroll={mobile ? 1 : 5}
-      loop
-      withIndicators
-      controlSize={34}
-    >
-      {slides}
-    </Carousel>
+    <div>
+      {releases && (
+        <Carousel
+          mt={200}
+          mx={550}
+          slideSize={350}
+          breakpoints={[{ maxWidth: "sm", slideSize: "100%", slideGap: "lg" }]}
+          slideGap="xl"
+          align="start"
+          slidesToScroll={mobile ? 1 : 3}
+          loop
+          withIndicators
+          controlSize={34}
+        >
+          {slides}
+        </Carousel>
+      )}
+    </div>
   );
 };
