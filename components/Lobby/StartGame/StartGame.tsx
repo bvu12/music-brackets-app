@@ -2,11 +2,7 @@ import { Center, Text, UnstyledButton } from "@mantine/core";
 import { useContext } from "react";
 import { SocketContext } from "../../SocketContext/socket";
 
-interface StartGameProps {
-  isRoomOwner: boolean;
-}
-
-export const StartGame = ({ isRoomOwner }: StartGameProps) => {
+export const StartGame = () => {
   const socket = useContext(SocketContext);
 
   const onStartGameClick = () => {

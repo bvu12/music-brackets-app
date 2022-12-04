@@ -24,9 +24,7 @@ export const Lobby = ({ roomName, isRoomOwner, players }: LobbyProps) => {
       <Grid.Col span={4}>
         <LobbyCode code={roomName} />
       </Grid.Col>
-      <Grid.Col span={4}>
-        <Settings />
-      </Grid.Col>
+      <Grid.Col span={4}>{isRoomOwner && <Settings />}</Grid.Col>
 
       <Grid.Col span={10}>
         <SpotifySearch />
@@ -37,7 +35,7 @@ export const Lobby = ({ roomName, isRoomOwner, players }: LobbyProps) => {
 
       <Grid.Col span={4}></Grid.Col>
       <Grid.Col span={4}>
-        <StartGame isRoomOwner={isRoomOwner} />
+        {isRoomOwner && <StartGame isRoomOwner={isRoomOwner} />}
       </Grid.Col>
       <Grid.Col span={4}></Grid.Col>
     </Grid>
