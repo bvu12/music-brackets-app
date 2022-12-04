@@ -7,7 +7,7 @@ interface LobbyCodeProps {
 export const LobbyCode = ({ code }: LobbyCodeProps) => {
   return (
     <Center>
-      <Card radius="lg" my="xl">
+      <Card radius="lg" mt="5%">
         <Text fz={32} fw={500}>
           Lobby Code:
         </Text>

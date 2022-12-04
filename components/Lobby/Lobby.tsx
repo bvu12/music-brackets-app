@@ -6,6 +6,8 @@ import { PlayersInLobby as PlayersInLobby } from "./PlayersInLobby/PlayersInLobb
 import { LobbyCode } from "./LobbyCode/LobbyCode";
 import { Settings } from "./Settings/Settings";
 import { StartGame } from "./StartGame/StartGame";
+import { SpotifySearch } from "./SpotifySearch/SpotifySearch";
+import { Grid } from "@mantine/core";
 
 interface LobbyProps {
   roomName: string;
@@ -17,11 +19,27 @@ export const Lobby = ({ roomName, isRoomOwner, players }: LobbyProps) => {
   const socket = useContext(SocketContext);
 
   return (
-    <div>
-      <LobbyCode code={roomName} />
-      <PlayersInLobby players={players} />
-      <Settings />
-      <StartGame isRoomOwner={isRoomOwner} />
-    </div>
+    <Grid align="stretch" grow gutter="xl">
+      <Grid.Col span={4}></Grid.Col>
+      <Grid.Col span={4}>
+        <LobbyCode code={roomName} />
+      </Grid.Col>
+      <Grid.Col span={4}>
+        <Settings />
+      </Grid.Col>
+
+      <Grid.Col span={10}>
+        <SpotifySearch />
+      </Grid.Col>
+      <Grid.Col span={2}>
+        <PlayersInLobby players={players} />
+      </Grid.Col>
+
+      <Grid.Col span={4}></Grid.Col>
+      <Grid.Col span={4}>
+        <StartGame isRoomOwner={isRoomOwner} />
+      </Grid.Col>
+      <Grid.Col span={4}></Grid.Col>
+    </Grid>
   );
 };

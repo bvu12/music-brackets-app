@@ -34,6 +34,7 @@ export const PlayersInLobby = ({ players }: PlayersInLobbyProps) => {
           radius="md"
           size={36}
           onClick={() => setOpened(true)}
+          ml="auto"
         >
           <IconEdit size={18} className={classes.renameIcon} stroke={1.5} />
         </ActionIcon>
@@ -52,9 +53,9 @@ export const PlayersInLobby = ({ players }: PlayersInLobbyProps) => {
   });
 
   return (
-    <Card p="lg" w={300} radius="lg">
+    <Card radius="lg" mr="20%">
       <RenameUser opened={opened} setOpened={setOpened} />
-      <Table horizontalSpacing="xl" my="xs" fontSize="xl">
+      <Table horizontalSpacing="xl" fontSize="xl">
         <thead>
           <tr>
             <th>Players:</th>

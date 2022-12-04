@@ -1,4 +1,4 @@
-import { ActionIcon, createStyles, Tooltip } from "@mantine/core";
+import { ActionIcon, Card, Center, createStyles, Tooltip } from "@mantine/core";
 import { IconSettings } from "@tabler/icons";
 
 const useStyles = createStyles((theme) => ({
@@ -16,27 +16,32 @@ export const Settings = () => {
   };
 
   return (
-    <Tooltip
-      label="Game settings"
-      color="#1DB954"
-      position="left"
-      withArrow
-      closeDelay={500}
-      fz={18}
-      fw={700}
-    >
-      <ActionIcon
-        variant="default"
-        radius="md"
-        size={_size}
-        onClick={() => onSettingsClick()}
+    <div>
+      <Tooltip
+        label="Game settings"
+        color="#1DB954"
+        position="left"
+        withArrow
+        closeDelay={500}
+        fz={18}
+        fw={700}
       >
-        <IconSettings
+        <ActionIcon
+          variant="default"
+          radius="md"
           size={_size}
-          className={classes.settingsIcon}
-          stroke={1.5}
-        />
-      </ActionIcon>
-    </Tooltip>
+          onClick={() => onSettingsClick()}
+          ml="auto"
+          mr="10%"
+          mt="5%"
+        >
+          <IconSettings
+            size={_size}
+            className={classes.settingsIcon}
+            stroke={1.5}
+          />
+        </ActionIcon>
+      </Tooltip>
+    </div>
   );
 };
