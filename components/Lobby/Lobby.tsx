@@ -4,6 +4,7 @@ import { SocketContext } from "../SocketContext/socket";
 import { Player } from "../../shared/types";
 import { PlayersInLobby as PlayersInLobby } from "./PlayersInLobby/PlayersInLobby";
 import { LobbyCode } from "./LobbyCode/LobbyCode";
+import { Settings } from "./Settings/Settings";
 
 interface LobbyProps {
   roomName: string;
@@ -18,6 +19,7 @@ export const Lobby = ({ roomName, isRoomOwner, players }: LobbyProps) => {
     <div>
       <LobbyCode code={roomName} />
       <PlayersInLobby players={players} />
+      <Settings />
     </div>
   );
 };
