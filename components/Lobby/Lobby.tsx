@@ -5,6 +5,7 @@ import { Player } from "../../shared/types";
 import { PlayersInLobby as PlayersInLobby } from "./PlayersInLobby/PlayersInLobby";
 import { LobbyCode } from "./LobbyCode/LobbyCode";
 import { Settings } from "./Settings/Settings";
+import { StartGame } from "./StartGame/StartGame";
 
 interface LobbyProps {
   roomName: string;
@@ -20,6 +21,7 @@ export const Lobby = ({ roomName, isRoomOwner, players }: LobbyProps) => {
       <LobbyCode code={roomName} />
       <PlayersInLobby players={players} />
       <Settings />
+      <StartGame isRoomOwner={isRoomOwner} />
     </div>
   );
 };
