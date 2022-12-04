@@ -56,6 +56,7 @@ export module roomService {
     if (index > -1) {
       players.splice(index, 1);
     }
+    players = _setNewRoomOwner(players);
     return players;
   }
 
@@ -86,4 +87,13 @@ function _getPlayersInRoom(rooms: Room[], socket: Socket) {
 function _getNextUsername(players: Player[]): string {
   const len = players.length;
   return "Player " + (len + 1).toString();
+}
+
+function _setNewRoomOwner(players: Player[]): Player[] {
+  // Post-delete, owner is set based on join time
+  if (players.length > 0) {
+    players[0].isRoomOwner = true;
+  }
+
+  return players;
 }

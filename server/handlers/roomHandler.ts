@@ -86,8 +86,8 @@ export function roomHandler(
   }
 
   function leaveRoom() {
-    const player: Player = activePlayers[socket.id].player;
-    const room: Room = activePlayers[socket.id].room;
+    const player: Player = activePlayers[socket.id]?.player;
+    const room: Room = activePlayers[socket.id]?.room;
     roomService.removePlayerFromRoom(room, player);
 
     server.in(room.roomId).emit("players-in-room", room.players);

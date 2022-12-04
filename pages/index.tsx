@@ -25,12 +25,22 @@ export default function Home() {
   const [players, setPlayers] = useState<Player[]>([]);
   const [isRoomOwner, setIsRoomOwner] = useState<boolean>(false);
 
+  const updateRoomOwnership = () => {
+    players?.map((player) => {
+      if (
+        socket.id === player.playerSocketId &&
+        isRoomOwner != player.isRoomOwner
+      ) {
+        setIsRoomOwner(player.isRoomOwner);
+      }
+    });
+  };
+
   // Server responses
   useEffect(() => {
     socket.on("create-room-msg", (message: string) => {
       setRoomName(getRoomIdFromString(message));
       setIsInRoom(true);
-      setIsRoomOwner(true); // TODO: This now comes from the server - might need to refactor this
     });
 
     socket.on("join-room-msg", (message: string) => {
@@ -42,6 +52,10 @@ export default function Home() {
       setPlayers(players);
     });
   });
+
+  useEffect(() => {
+    updateRoomOwnership();
+  }, [players]);
 
   return isInRoom ? (
     <Lobby roomName={roomName} isRoomOwner={isRoomOwner} players={players} />
