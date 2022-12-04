@@ -3,6 +3,7 @@ import { Room } from "../server/types/types";
 export interface Player {
   playerSocketId: string;
   username: string;
+  isRoomOwner: boolean;
 }
 
 export interface PlayerToRoomDict {

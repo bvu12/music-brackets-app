@@ -20,6 +20,7 @@ export function roomHandler(
     const owner: Player = {
       playerSocketId: socket.id,
       username: "Player 1",
+      isRoomOwner: true,
     };
 
     socket.join(roomId);

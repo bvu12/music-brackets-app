@@ -30,7 +30,7 @@ export default function Home() {
     socket.on("create-room-msg", (message: string) => {
       setRoomName(getRoomIdFromString(message));
       setIsInRoom(true);
-      setIsRoomOwner(true);
+      setIsRoomOwner(true); // TODO: This now comes from the server - might need to refactor this
     });
 
     socket.on("join-room-msg", (message: string) => {

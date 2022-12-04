@@ -1,14 +1,16 @@
 import { useState, useContext } from "react";
 import { ActionIcon, createStyles, Table, Card } from "@mantine/core";
-import { useForm } from "@mantine/form";
 import { SocketContext } from "../../SocketContext/socket";
-import { IconEdit } from "@tabler/icons";
+import { IconCrown, IconEdit } from "@tabler/icons";
 import { Player } from "../../../shared/types";
 import { RenameUser } from "./RenameUser.tsx/RenameUser";
 
 const useStyles = createStyles((theme) => ({
   renameIcon: {
     color: theme.colors.red[6],
+  },
+  ownerIcon: {
+    color: "yellow",
   },
 }));
 
@@ -25,7 +27,14 @@ export const PlayersInLobby = ({ players }: PlayersInLobbyProps) => {
 
   // Table rows
   const rows = players?.map((player) => {
-    let renameButton;
+    let ownerCrown = null;
+    let renameButton = null;
+
+    if (player.isRoomOwner) {
+      ownerCrown = (
+        <IconCrown size={18} className={classes.ownerIcon} stroke={1.5} />
+      );
+    }
 
     if (socket.id === player.playerSocketId) {
       renameButton = (
@@ -39,12 +48,11 @@ export const PlayersInLobby = ({ players }: PlayersInLobbyProps) => {
           <IconEdit size={18} className={classes.renameIcon} stroke={1.5} />
         </ActionIcon>
       );
-    } else {
-      renameButton = null;
     }
 
     return (
       <tr key={player.playerSocketId}>
+        <td>{ownerCrown}</td>
         <td>{player.username}</td>
 
         <td>{renameButton}</td>
@@ -58,6 +66,7 @@ export const PlayersInLobby = ({ players }: PlayersInLobbyProps) => {
       <Table horizontalSpacing="xl" fontSize="xl">
         <thead>
           <tr>
+            <th></th>
             <th>Players:</th>
             <th></th>
           </tr>

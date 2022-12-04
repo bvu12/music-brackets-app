@@ -40,6 +40,7 @@ export module roomService {
       const newPlayer: Player = {
         playerSocketId: socket.id,
         username: _getNextUsername(players),
+        isRoomOwner: false,
       };
 
       players.push(newPlayer);
