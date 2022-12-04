@@ -2,14 +2,19 @@ import { Server, Socket } from "socket.io";
 import { customAlphabet } from "nanoid";
 
 import { Room } from "../types/types";
-import { Player } from "../../shared/types";
+import { Player, PlayerToRoomDict } from "../../shared/types";
 import { roomService } from "../services/roomService";
 import { startCountdownTimer } from "./timerHandler";
 
 const TIMER_DEFAULT_SECONDS = 10;
 const nanoid = customAlphabet("1234567890abcdefghijklmnopqrstuvwxyz", 5);
 
-export function roomHandler(server: Server, socket: Socket, rooms: Room[]) {
+export function roomHandler(
+  server: Server,
+  socket: Socket,
+  rooms: Room[],
+  activePlayers: PlayerToRoomDict
+) {
   function createRoom() {
     const roomId = nanoid().toUpperCase();
     const owner: Player = {
@@ -37,6 +42,12 @@ export function roomHandler(server: Server, socket: Socket, rooms: Room[]) {
 
     rooms.push(room);
 
+    // So we can easily remove players from a room - basically a BiDict... not sure if this is the best implementation
+    activePlayers[socket.id] = {
+      player: owner,
+      room: room,
+    };
+
     server.in(roomId).emit("players-in-room", room.players);
 
     // Start the timer on room creation
@@ -54,18 +65,35 @@ export function roomHandler(server: Server, socket: Socket, rooms: Room[]) {
     const room = roomService.findRoomByRoomId(rooms, roomId);
     if (room) {
       socket.join(roomId);
-      roomService.addPlayerToRoom(rooms, socket);
+      const newPlayer = roomService.addPlayerToRoom(rooms, socket);
 
-      server.in(roomId).emit("players-in-room", room.players);
-      server
-        .in(socket.id)
-        .emit("join-room-msg", `Successfully joined room: '${roomId}'`);
-      console.log(`${socket.id}: successfully joined room: '${roomId}' `);
+      if (newPlayer) {
+        activePlayers[socket.id] = {
+          player: newPlayer,
+          room: room,
+        };
+
+        server.in(roomId).emit("players-in-room", room.players);
+        server
+          .in(socket.id)
+          .emit("join-room-msg", `Successfully joined room: '${roomId}'`);
+        console.log(`${socket.id}: successfully joined room: '${roomId}' `);
+      }
     } else {
       server.in(socket.id).emit("join-room-err-msg", "Invalid join code!");
     }
   }
 
+  function leaveRoom() {
+    const player: Player = activePlayers[socket.id].player;
+    const room: Room = activePlayers[socket.id].room;
+    roomService.removePlayerFromRoom(room, player);
+
+    server.in(room.roomId).emit("players-in-room", room.players);
+    delete activePlayers[socket.id];
+  }
+
   socket.on("create_room", createRoom);
   socket.on("join_room", joinRoom);
+  socket.on("disconnect", leaveRoom);
 }

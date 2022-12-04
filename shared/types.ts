@@ -1,6 +1,15 @@
+import { Room } from "../server/types/types";
+
 export interface Player {
   playerSocketId: string;
   username: string;
+}
+
+export interface PlayerToRoomDict {
+  [socketId: string]: {
+    player: Player;
+    room: Room;
+  };
 }
 
 export interface NewReleases {

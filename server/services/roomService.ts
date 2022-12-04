@@ -35,10 +35,27 @@ export module roomService {
 
   export function addPlayerToRoom(rooms: Room[], socket: Socket) {
     var players = _getPlayersInRoom(rooms, socket);
-    players?.push({
-      playerSocketId: socket.id,
-      username: _getNextUsername(players),
-    });
+
+    if (players) {
+      const newPlayer: Player = {
+        playerSocketId: socket.id,
+        username: _getNextUsername(players),
+      };
+
+      players.push(newPlayer);
+
+      return newPlayer;
+    }
+  }
+
+  export function removePlayerFromRoom(room: Room, player: Player) {
+    let players = room.players;
+
+    const index = players.indexOf(player);
+    if (index > -1) {
+      players.splice(index, 1);
+    }
+    return players;
   }
 
   export function editPlayerUsername(
