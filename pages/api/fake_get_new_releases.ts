@@ -1,4 +1,5 @@
 // GET https://api.spotify.com/v1/browse/new-releases
+// TODO: When this gets implemented for real, this should be cached for X hours
 import type { NextApiRequest, NextApiResponse } from "next";
 import { NewReleases } from "../../shared/types";
 
