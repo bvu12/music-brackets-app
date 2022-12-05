@@ -57,6 +57,7 @@ export module roomService {
       players.splice(index, 1);
     }
     players = _setNewRoomOwner(players);
+    // TODO: Remove room from rooms if there are no more players
     return players;
   }
 
