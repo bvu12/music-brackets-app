@@ -29,10 +29,10 @@ export interface NewReleaseItem {
   album_type: string;
   artists: NewReleaseArtists[];
   available_markets: string[];
-  external_urls: NewReleaseExternalUrls;
+  external_urls: SpotifyExternalUrls;
   href: string;
   id: string;
-  images: NewReleaseImages[];
+  images: SpotifyImages[];
   name: string;
   release_date: string;
   release_date_precision: string;
@@ -42,7 +42,7 @@ export interface NewReleaseItem {
 }
 
 export interface NewReleaseArtists {
-  external_urls: NewReleaseExternalUrls;
+  external_urls: SpotifyExternalUrls;
   href: string;
   id: string;
   name: string;
@@ -50,12 +50,40 @@ export interface NewReleaseArtists {
   uri: string;
 }
 
-export interface NewReleaseImages {
+export interface SpotifyImages {
   height: number;
   url: string;
   width: number;
 }
 
-export interface NewReleaseExternalUrls {
+export interface SpotifyExternalUrls {
   spotify: string;
+}
+
+export interface SearchForArtist {
+  artists: {
+    href: string;
+    items: SearchForArtistItem[];
+    limit: number;
+    next: string;
+    offset: number;
+    previous: string | null;
+    total: number;
+  };
+}
+
+export interface SearchForArtistItem {
+  external_urls: SpotifyExternalUrls;
+  followers: {
+    href: string | null;
+    total: number;
+  };
+  genres: string[];
+  href: string;
+  id: string;
+  images: SpotifyImages[];
+  name: string;
+  popularity: number;
+  type: string;
+  uri: string;
 }
