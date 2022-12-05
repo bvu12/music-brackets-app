@@ -6,7 +6,13 @@ export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<SearchForArtist>
 ) {
-  res.status(200).json(search_results);
+  // Return varying subset to emulate getting different search results
+  let _search_results = JSON.parse(JSON.stringify(search_results)); // deepcopy
+  let _items = _search_results.artists.items;
+  _items = _items.slice(0, Math.floor(Math.random() * _items.length));
+  _search_results.artists.items = _items;
+
+  res.status(200).json(_search_results);
 }
 
 const search_results = {
