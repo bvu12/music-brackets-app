@@ -1,4 +1,4 @@
-import { Carousel } from "@mantine/carousel";
+import { Carousel, CarouselProps } from "@mantine/carousel";
 
 import { NewReleases } from "../../../shared/types";
 import { CarouselCard } from "../../shared/Carousel/CarouselCard";
@@ -10,6 +10,11 @@ const carouselStyle: Record<string, React.CSSProperties> = {
     marginLeft: 275,
     marginRight: 275,
   },
+};
+
+const carouselOptions: CarouselProps = {
+  slideSize: 400,
+  loop: true,
 };
 
 export interface SpotifyBannerNewReleasesProps {
@@ -38,7 +43,13 @@ export const SpotifyBannerNewReleases = ({
 
   return (
     <div>
-      {releases && <CarouselFactory cards={cards} styles={carouselStyle} />}
+      {releases && (
+        <CarouselFactory
+          cards={cards}
+          styles={carouselStyle}
+          carouselOptions={carouselOptions}
+        />
+      )}
     </div>
   );
 };

@@ -3,7 +3,7 @@ import { createStyles, Paper, Text, Title } from "@mantine/core";
 export interface CardProps {
   image: string;
   title: string;
-  category: string;
+  category?: string;
   button?: React.ReactNode;
 }
 
