@@ -7,13 +7,13 @@ import {
   Title,
   useMantineTheme,
   Button,
+  Group,
 } from "@mantine/core";
+import { SearchForArtist } from "../../../../shared/types";
+import { IconArrowLeft, IconArrowRight } from "@tabler/icons";
 
-import { NewReleases } from "../../../shared/types";
-import { CarouselCard } from "../../shared/Carousel/CarouselCard";
-
-interface SpotifyBannerNewReleasesProps {
-  newReleases?: NewReleases;
+interface SpotifySearchCardsProps {
+  searches: SearchForArtist;
 }
 
 interface CardProps {
@@ -54,42 +54,60 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export const SpotifyBannerNewReleases = ({
-  newReleases,
-}: SpotifyBannerNewReleasesProps) => {
-  const releases = newReleases?.albums.items;
+function Card({ image, title, category }: CardProps) {
+  const { classes } = useStyles();
 
+  return (
+    <Paper
+      shadow="md"
+      p="xl"
+      radius="md"
+      sx={{ backgroundImage: `url(${image})` }}
+      className={classes.card}
+    >
+      <div>
+        <Title className={classes.title}>{title}</Title>{" "}
+      </div>
+      <Text className={classes.category}>{category}</Text>
+      <Button
+        onClick={() => alert("Implement me!")}
+        variant="white"
+        color="dark"
+      >
+        Select artist
+      </Button>
+    </Paper>
+  );
+}
+
+export const SpotifySearchCards = ({ searches }: SpotifySearchCardsProps) => {
+  const artists = searches.artists.items;
   const theme = useMantineTheme();
   const mobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm}px)`);
-  const slides = releases?.map((release) => {
-    const main_artist = release.artists[0].name;
-    const release_name = release.name;
-    const image_url = release.images[0].url;
+  const slides = artists?.map((artist) => {
+    const main_artist = artist.name;
+    const image_url = artist.images[0].url;
 
     const card: CardProps = {
       image: image_url,
       title: main_artist,
-      category: release_name,
+      category: "",
     };
 
     return (
-      <Carousel.Slide key={release_name}>
-        <CarouselCard
-          image={image_url}
-          title={main_artist}
-          category={release_name}
-        />
+      <Carousel.Slide key={main_artist}>
+        <Card {...card} />
       </Carousel.Slide>
     );
   });
 
   return (
     <div>
-      {releases && (
+      {artists && (
         <Carousel
-          mt={200}
-          mx={550}
-          slideSize={350}
+          mt={40}
+          mx={25}
+          slideSize={400}
           breakpoints={[{ maxWidth: "sm", slideSize: "100%", slideGap: "lg" }]}
           slideGap="xl"
           align="start"
@@ -97,6 +115,16 @@ export const SpotifyBannerNewReleases = ({
           loop
           withIndicators
           controlSize={34}
+          nextControlIcon={<IconArrowRight size={16} />}
+          previousControlIcon={<IconArrowLeft size={16} />}
+          styles={{
+            control: {
+              "&[data-inactive]": {
+                opacity: 0,
+                cursor: "default",
+              },
+            },
+          }}
         >
           {slides}
         </Carousel>

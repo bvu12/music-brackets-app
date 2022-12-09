@@ -3,6 +3,7 @@ import { Card, Paper, Text, TextInput } from "@mantine/core";
 import { useDebouncedState } from "@mantine/hooks";
 import { IconSearch } from "@tabler/icons";
 import { SearchForArtist } from "../../../shared/types";
+import { SpotifySearchCards } from "./SpotifySearchCards/SpotifySearchCards";
 
 async function getSearchResults() {
   const res = await fetch("/api/fake_get_artist_search_results");
@@ -27,7 +28,6 @@ export const SpotifySearch = () => {
     if (searchString) {
       getSearchResults().then((results: SearchForArtist) => {
         setSearchResults(results);
-        console.log(results.artists.items);
       });
     }
   }, [searchString]);
@@ -41,10 +41,7 @@ export const SpotifySearch = () => {
           style={{ flex: 1 }}
           onChange={(event) => setSearchString(event.currentTarget.value)}
         />
-        {searchResults &&
-          searchResults.artists.items.map((item) => {
-            return <p>{item.name}</p>;
-          })}
+        {searchResults && <SpotifySearchCards searches={searchResults} />}
       </Card>
     </Paper>
   );
