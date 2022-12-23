@@ -18,12 +18,19 @@ async function getSearchResults() {
   return res.json();
 }
 
-export const SpotifySearch = () => {
+interface SpotifySearchProps {
+  selectedArtists: SearchForArtistItem[];
+  onClickAddArtist: (artist: SearchForArtistItem) => void;
+  onClickRemoveArtist: (artist: SearchForArtistItem) => void;
+}
+
+export const SpotifySearch = ({
+  selectedArtists,
+  onClickAddArtist,
+  onClickRemoveArtist,
+}: SpotifySearchProps) => {
   const [searchString, setSearchString] = useDebouncedState("", 400);
   const [searchResults, setSearchResults] = useState<SearchForArtist>();
-  const [selectedArtists, setSelectedArtists] = useState<SearchForArtistItem[]>(
-    []
-  );
 
   // On user search, get results from API
   useEffect(() => {
@@ -33,25 +40,6 @@ export const SpotifySearch = () => {
       });
     }
   }, [searchString]);
-
-  // On click, add to selected artists
-  const onClickAddArtist = (artist: SearchForArtistItem) => {
-    if (
-      !selectedArtists.some(
-        (alreadySelected) => alreadySelected.id === artist.id
-      )
-    ) {
-      setSelectedArtists([...selectedArtists, artist]);
-    }
-  };
-
-  const onClickRemoveArtist = (artist: SearchForArtistItem) => {
-    setSelectedArtists(
-      selectedArtists.filter((alreadySelected) => {
-        return alreadySelected.id !== artist.id;
-      })
-    );
-  };
 
   const iconSearch = <IconSearch size={18} stroke={2} />;
   return (
