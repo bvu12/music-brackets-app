@@ -1,8 +1,12 @@
-import { Center, Text, UnstyledButton } from "@mantine/core";
+import { Center, Text, Button } from "@mantine/core";
 import { useContext } from "react";
 import { SocketContext } from "../../SocketContext/socket";
 
-export const StartGame = () => {
+interface StartGameProps {
+  disabled: boolean;
+}
+
+export const StartGame = ({ disabled }: StartGameProps) => {
   const socket = useContext(SocketContext);
 
   const onStartGameClick = () => {
@@ -11,34 +15,15 @@ export const StartGame = () => {
 
   return (
     <Center>
-      <UnstyledButton bg="yellow" onClick={() => onStartGameClick()} p="sm">
-        <div>
-          <Text
-            variant="gradient"
-            gradient={{ from: "indigo", to: "cyan", deg: 45 }}
-            sx={{
-              fontFamily: "Greycliff CF, sans-serif",
-            }}
-            ta="center"
-            fz="xl"
-            fw={700}
-          >
-            START
-          </Text>
-          <Text
-            variant="gradient"
-            gradient={{ from: "indigo", to: "cyan", deg: 45 }}
-            sx={{
-              fontFamily: "Greycliff CF, sans-serif",
-            }}
-            ta="center"
-            fz="xl"
-            fw={700}
-          >
-            GAME
-          </Text>
-        </div>
-      </UnstyledButton>
+      <Button
+        disabled={disabled}
+        size="xl"
+        uppercase
+        variant="gradient"
+        gradient={{ from: "#ed6ea0", to: "#ec8c69", deg: 35 }}
+      >
+        Start Game
+      </Button>
     </Center>
   );
 };

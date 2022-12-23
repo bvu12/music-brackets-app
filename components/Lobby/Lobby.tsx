@@ -41,6 +41,8 @@ export const Lobby = ({ roomName, isRoomOwner, players }: LobbyProps) => {
     );
   };
 
+  const isStartGameDisabled = selectedArtists.length == 0;
+
   return (
     <Grid align="stretch" grow gutter="xl">
       <Grid.Col span={4}></Grid.Col>
@@ -61,7 +63,9 @@ export const Lobby = ({ roomName, isRoomOwner, players }: LobbyProps) => {
       </Grid.Col>
 
       <Grid.Col span={4}></Grid.Col>
-      <Grid.Col span={4}>{isRoomOwner && <StartGame />}</Grid.Col>
+      <Grid.Col span={4}>
+        {isRoomOwner && <StartGame disabled={isStartGameDisabled} />}
+      </Grid.Col>
       <Grid.Col span={4}></Grid.Col>
     </Grid>
   );
