@@ -1,6 +1,6 @@
 import { Carousel, CarouselProps } from "@mantine/carousel";
 import { Button } from "@mantine/core";
-import { SearchForArtist } from "../../../../shared/types";
+import { SearchForArtist, SearchForArtistItem } from "../../../../shared/types";
 import { CardProps, CarouselCard } from "../../../shared/Carousel/CarouselCard";
 import { CarouselFactory } from "../../../shared/Carousel/CarouselFactory";
 
@@ -19,20 +19,18 @@ const carouselOptions: CarouselProps = {
 
 interface SpotifyBannerSearchProps {
   searches?: SearchForArtist;
+  onClick: (artist: SearchForArtistItem) => void;
 }
 
-export const SpotifyBannerSearch = ({ searches }: SpotifyBannerSearchProps) => {
+export const SpotifyBannerSearch = ({
+  searches,
+  onClick,
+}: SpotifyBannerSearchProps) => {
   const artists = searches?.artists.items;
 
   const cards = artists?.map((artist) => {
     const main_artist = artist.name;
     const image_url = artist.images[0].url;
-
-    const card: CardProps = {
-      image: image_url,
-      title: main_artist,
-      category: "",
-    };
 
     return (
       <Carousel.Slide key={main_artist}>
@@ -41,7 +39,7 @@ export const SpotifyBannerSearch = ({ searches }: SpotifyBannerSearchProps) => {
           title={main_artist}
           button={
             <Button
-              onClick={() => alert("Implement me!")}
+              onClick={() => onClick(artist)}
               variant="white"
               color="dark"
             >
