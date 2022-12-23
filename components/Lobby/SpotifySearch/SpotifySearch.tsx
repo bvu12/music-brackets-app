@@ -35,7 +35,7 @@ export const SpotifySearch = () => {
   }, [searchString]);
 
   // On click, add to selected artists
-  const onClickArtist = (artist: SearchForArtistItem) => {
+  const onClickAddArtist = (artist: SearchForArtistItem) => {
     if (
       !selectedArtists.some(
         (alreadySelected) => alreadySelected.id === artist.id
@@ -45,10 +45,18 @@ export const SpotifySearch = () => {
     }
   };
 
+  const onClickRemoveArtist = (artist: SearchForArtistItem) => {
+    setSelectedArtists(
+      selectedArtists.filter((alreadySelected) => {
+        return alreadySelected.id !== artist.id;
+      })
+    );
+  };
+
   const iconSearch = <IconSearch size={18} stroke={2} />;
   return (
     <Paper shadow="xs" ml="3%">
-      <Card radius="lg" w="100%" h={800}>
+      <Card radius="lg" w="100%" h={750}>
         <TextInput
           icon={iconSearch}
           placeholder="Who do you want to listen to?"
@@ -58,10 +66,15 @@ export const SpotifySearch = () => {
         {searchResults && (
           <SpotifyBannerSearch
             searches={searchResults}
-            onClick={onClickArtist}
+            onClick={onClickAddArtist}
           />
         )}
-        {selectedArtists && <SelectedArtists artists={selectedArtists} />}
+        {selectedArtists && (
+          <SelectedArtists
+            artists={selectedArtists}
+            onClick={onClickRemoveArtist}
+          />
+        )}
       </Card>
     </Paper>
   );

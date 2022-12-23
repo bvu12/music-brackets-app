@@ -1,7 +1,7 @@
 import { Carousel, CarouselProps } from "@mantine/carousel";
 import { Button } from "@mantine/core";
 import { SearchForArtist, SearchForArtistItem } from "../../../../shared/types";
-import { CardProps, CarouselCard } from "../../../shared/Carousel/CarouselCard";
+import { CarouselCard } from "../../../shared/Carousel/CarouselCard";
 import { CarouselFactory } from "../../../shared/Carousel/CarouselFactory";
 
 const carouselStyle: Record<string, React.CSSProperties> = {
