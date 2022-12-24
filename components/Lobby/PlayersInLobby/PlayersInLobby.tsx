@@ -3,7 +3,7 @@ import { ActionIcon, createStyles, Table, Card } from "@mantine/core";
 import { SocketContext } from "../../SocketContext/socket";
 import { IconCrown, IconEdit } from "@tabler/icons";
 import { Player } from "../../../shared/types";
-import { RenameUser } from "./RenameUser.tsx/RenameUser";
+import { RenameUserModal } from "./RenameUserModal/RenameUserModal";
 
 const useStyles = createStyles((theme) => ({
   renameIcon: {
@@ -62,7 +62,7 @@ export const PlayersInLobby = ({ players }: PlayersInLobbyProps) => {
 
   return (
     <Card radius="lg" mr="20%">
-      <RenameUser opened={opened} setOpened={setOpened} />
+      <RenameUserModal opened={opened} setOpened={setOpened} />
       <Table horizontalSpacing="xl" fontSize="xl">
         <thead>
           <tr>

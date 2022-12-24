@@ -1,5 +1,7 @@
 import { ActionIcon, Card, Center, createStyles, Tooltip } from "@mantine/core";
 import { IconSettings } from "@tabler/icons";
+import { useState } from "react";
+import { SettingsModal } from "./SettingsModal/SettingsModal";
 
 const useStyles = createStyles((theme) => ({
   settingsIcon: {
@@ -8,15 +10,19 @@ const useStyles = createStyles((theme) => ({
 }));
 
 export const Settings = () => {
-  const { classes, theme } = useStyles();
+  // Modal state
+  const [opened, setOpened] = useState(false);
+
+  const { classes } = useStyles();
   const _size = 100;
 
   const onSettingsClick = () => {
-    alert("TODO: implement me!");
+    setOpened(true);
   };
 
   return (
     <div>
+      <SettingsModal opened={opened} setOpened={setOpened} />
       <Tooltip
         label="Game settings"
         color="#1DB954"

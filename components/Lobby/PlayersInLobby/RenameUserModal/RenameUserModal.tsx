@@ -8,7 +8,7 @@ interface RenameUserProps {
   setOpened: Dispatch<boolean>;
 }
 
-export const RenameUser = ({ opened, setOpened }: RenameUserProps) => {
+export const RenameUserModal = ({ opened, setOpened }: RenameUserProps) => {
   const socket = useContext(SocketContext);
 
   // Modal
