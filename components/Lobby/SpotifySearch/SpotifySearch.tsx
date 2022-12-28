@@ -47,24 +47,27 @@ export const SpotifySearch = ({
   return (
     <Paper shadow="xs" ml="3%">
       <Card radius="lg" w="100%" h={750}>
-        <TextInput
-          icon={iconSearch}
-          placeholder="Who do you want to listen to?"
-          style={{ flex: 1 }}
-          onChange={(event) => setSearchString(event.currentTarget.value)}
-        />
+        {isRoomOwner && (
+          <TextInput
+            icon={iconSearch}
+            placeholder="Who do you want to listen to?"
+            style={{ flex: 1 }}
+            onChange={(event) => setSearchString(event.currentTarget.value)}
+          />
+        )}
         {isRoomOwner && searchResults && (
           <SpotifyBannerSearch
             searches={searchResults}
             onClick={onClickAddArtist}
           />
         )}
-        {!isRoomOwner && selectedArtists && (
-          <SpotifyBannerSearch
-            searches={selectedArtists}
-            onClick={onClickAddArtist}
-          />
-        )}
+        {!isRoomOwner &&
+          selectedArtists && ( // Lobby participants only see the selected artists
+            <SpotifyBannerSearch
+              searches={selectedArtists}
+              onClick={onClickAddArtist}
+            />
+          )}
         {isRoomOwner && selectedArtists && (
           <SelectedArtists
             artists={selectedArtists}
