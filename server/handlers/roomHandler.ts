@@ -80,6 +80,7 @@ export function roomHandler(
           .in(socket.id)
           .emit("join-room-msg", `Successfully joined room: '${roomId}'`);
         console.log(`${socket.id}: successfully joined room: '${roomId}' `);
+        server.in(room.roomId).emit("selected_artists", room.selectedArtists); // So the user sees the updated lobby
       }
     } else {
       server.in(socket.id).emit("join-room-err-msg", "Invalid join code!");
