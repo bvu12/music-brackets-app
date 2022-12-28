@@ -5,6 +5,7 @@ import { SocketContext } from "../components/SocketContext/socket";
 import { Player } from "../shared/types";
 import { LandingPage } from "../components/LandingPage/LandingPage";
 import { Lobby } from "../components/Lobby/Lobby";
+import React from "react";
 
 function getRoomIdFromString(message: string): string {
   let roomId = message.match(/'(.*?)'/g);
@@ -14,6 +15,8 @@ function getRoomIdFromString(message: string): string {
     return "";
   }
 }
+
+export const RoomOwnerContext = React.createContext(false);
 
 export default function Home() {
   // Socket
@@ -58,7 +61,9 @@ export default function Home() {
   }, [players]);
 
   return isInRoom ? (
-    <Lobby roomName={roomName} isRoomOwner={isRoomOwner} players={players} />
+    <RoomOwnerContext.Provider value={isRoomOwner}>
+      <Lobby roomName={roomName} players={players} />
+    </RoomOwnerContext.Provider>
   ) : (
     <LandingPage />
   );

@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Card, Paper, Text, TextInput } from "@mantine/core";
 import { useDebouncedState } from "@mantine/hooks";
 import { IconSearch } from "@tabler/icons";
 import { SearchForArtist, SearchForArtistItem } from "../../../shared/types";
 import { SpotifyBannerSearch } from "./SpotifyBannerSearch/SpotifyBannerSearch";
 import { SelectedArtists } from "./SelectedArtists/SelectedArtists";
+import { RoomOwnerContext } from "../../../pages";
 
 async function getSearchResults() {
   const res = await fetch("/api/fake_get_artist_search_results");
@@ -19,18 +20,17 @@ async function getSearchResults() {
 }
 
 interface SpotifySearchProps {
-  isRoomOwner: boolean;
   selectedArtists: SearchForArtistItem[];
   onClickAddArtist: (artist: SearchForArtistItem) => void;
   onClickRemoveArtist: (artist: SearchForArtistItem) => void;
 }
 
 export const SpotifySearch = ({
-  isRoomOwner,
   selectedArtists,
   onClickAddArtist,
   onClickRemoveArtist,
 }: SpotifySearchProps) => {
+  const isRoomOwner = useContext(RoomOwnerContext);
   const [searchString, setSearchString] = useDebouncedState("", 400);
   const [searchResults, setSearchResults] = useState<SearchForArtistItem[]>();
 
@@ -55,14 +55,12 @@ export const SpotifySearch = ({
         />
         {isRoomOwner && searchResults && (
           <SpotifyBannerSearch
-            isRoomOwner={isRoomOwner}
             searches={searchResults}
             onClick={onClickAddArtist}
           />
         )}
         {!isRoomOwner && selectedArtists && (
           <SpotifyBannerSearch
-            isRoomOwner={isRoomOwner}
             searches={selectedArtists}
             onClick={onClickAddArtist}
           />

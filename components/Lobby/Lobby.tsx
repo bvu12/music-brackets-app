@@ -8,15 +8,16 @@ import { Settings } from "./Settings/Settings";
 import { StartGame } from "./StartGame/StartGame";
 import { SpotifySearch } from "./SpotifySearch/SpotifySearch";
 import { Grid } from "@mantine/core";
+import { RoomOwnerContext } from "../../pages";
 
 interface LobbyProps {
   roomName: string;
-  isRoomOwner: boolean;
   players: Player[];
 }
 
-export const Lobby = ({ roomName, isRoomOwner, players }: LobbyProps) => {
+export const Lobby = ({ roomName, players }: LobbyProps) => {
   const socket = useContext(SocketContext);
+  const isRoomOwner = useContext(RoomOwnerContext);
 
   const [selectedArtists, setSelectedArtists] = useState<SearchForArtistItem[]>(
     []
@@ -49,7 +50,6 @@ export const Lobby = ({ roomName, isRoomOwner, players }: LobbyProps) => {
 
       <Grid.Col span={10}>
         <SpotifySearch
-          isRoomOwner={isRoomOwner}
           selectedArtists={selectedArtists}
           onClickAddArtist={onClickAddArtist}
           onClickRemoveArtist={onClickRemoveArtist}

@@ -1,5 +1,7 @@
 import { Carousel, CarouselProps } from "@mantine/carousel";
 import { Button } from "@mantine/core";
+import { useContext } from "react";
+import { RoomOwnerContext } from "../../../../pages";
 import { SearchForArtistItem } from "../../../../shared/types";
 import { CarouselCard } from "../../../shared/Carousel/CarouselCard";
 import { CarouselFactory } from "../../../shared/Carousel/CarouselFactory";
@@ -18,23 +20,21 @@ const carouselOptions: CarouselProps = {
 };
 
 interface SpotifyBannerSearchProps {
-  isRoomOwner: boolean;
   searches?: SearchForArtistItem[];
   onClick: (artist: SearchForArtistItem) => void;
 }
 
 export const SpotifyBannerSearch = ({
-  isRoomOwner,
   searches,
   onClick,
 }: SpotifyBannerSearchProps) => {
   const cards = searches?.map((artist) => {
+    const isRoomOwner = useContext(RoomOwnerContext);
     const main_artist = artist.name;
     const image_url = artist.images[0].url;
     let button = null;
 
     if (isRoomOwner) {
-      console.log("??");
       button = (
         <Button onClick={() => onClick(artist)} variant="white" color="dark">
           Select artist
