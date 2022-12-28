@@ -39,6 +39,7 @@ export function roomHandler(
       currentTime: 0,
       isRunning: false,
       players: [owner],
+      selectedArtists: [],
     };
 
     rooms.push(room);

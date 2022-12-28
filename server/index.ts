@@ -6,10 +6,11 @@ import { createServer } from "http";
 import { Server, Socket } from "socket.io";
 
 import { Room } from "./types/types";
+import { lobbyHandler } from "./handlers/lobbyHandler";
 import { roomHandler } from "./handlers/roomHandler";
 import { timerHandler } from "./handlers/timerHandler";
 import { userHandler } from "./handlers/userHandler";
-import { Player, PlayerToRoomDict } from "../shared/types";
+import { PlayerToRoomDict } from "../shared/types";
 
 const port = parseInt(process.env.PORT || "3000", 10);
 const dev = process.env.NODE_ENV !== "production";
@@ -33,6 +34,7 @@ app
 
     // const requestHandler = createRequestHandler(socketServer);
     const socketHandler = (socket: Socket) => {
+      lobbyHandler(socketServer, socket, rooms);
       roomHandler(socketServer, socket, rooms, activePlayers);
       timerHandler(socketServer, socket, rooms);
       userHandler(socketServer, socket, rooms);

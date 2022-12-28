@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { SocketContext } from "../SocketContext/socket";
 
 import { Player, SearchForArtistItem } from "../../shared/types";
@@ -21,27 +21,23 @@ export const Lobby = ({ roomName, isRoomOwner, players }: LobbyProps) => {
   const [selectedArtists, setSelectedArtists] = useState<SearchForArtistItem[]>(
     []
   );
+  const isStartGameDisabled = selectedArtists.length == 0;
 
-  // On click, add to selected artists
+  // Client actions
   const onClickAddArtist = (artist: SearchForArtistItem) => {
-    if (
-      !selectedArtists.some(
-        (alreadySelected) => alreadySelected.id === artist.id
-      )
-    ) {
-      setSelectedArtists([...selectedArtists, artist]);
-    }
+    socket.emit("add_selected_artist", artist);
   };
 
   const onClickRemoveArtist = (artist: SearchForArtistItem) => {
-    setSelectedArtists(
-      selectedArtists.filter((alreadySelected) => {
-        return alreadySelected.id !== artist.id;
-      })
-    );
+    socket.emit("remove_selected_artist", artist);
   };
 
-  const isStartGameDisabled = selectedArtists.length == 0;
+  // Server responses
+  useEffect(() => {
+    socket.on("selected_artists", (artists: SearchForArtistItem[]) => {
+      setSelectedArtists(artists);
+    });
+  });
 
   return (
     <Grid align="stretch" grow gutter="xl">
@@ -53,6 +49,7 @@ export const Lobby = ({ roomName, isRoomOwner, players }: LobbyProps) => {
 
       <Grid.Col span={10}>
         <SpotifySearch
+          isRoomOwner={isRoomOwner}
           selectedArtists={selectedArtists}
           onClickAddArtist={onClickAddArtist}
           onClickRemoveArtist={onClickRemoveArtist}

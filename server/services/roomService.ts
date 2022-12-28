@@ -1,5 +1,5 @@
 import { Room } from "../types/types";
-import { Player } from "../../shared/types";
+import { Player, SearchForArtistItem } from "../../shared/types";
 import { Socket } from "socket.io";
 
 export module roomService {
@@ -75,6 +75,40 @@ export module roomService {
           player.username = desiredUsername;
         }
       }
+    }
+  }
+
+  export function addArtistToRoom(
+    rooms: Room[],
+    socket: Socket,
+    artist: SearchForArtistItem
+  ) {
+    const room = roomService.findRoomBySocket(rooms, socket);
+    const selectedArtists = room?.selectedArtists;
+
+    // Only add if not already in the list
+    if (
+      selectedArtists &&
+      !selectedArtists.some(
+        (alreadySelected) => alreadySelected.id === artist.id
+      )
+    ) {
+      room.selectedArtists = [...selectedArtists, artist];
+    }
+  }
+
+  export function removeArtistFromRoom(
+    rooms: Room[],
+    socket: Socket,
+    artist: SearchForArtistItem
+  ) {
+    const room = roomService.findRoomBySocket(rooms, socket);
+    const selectedArtists = room?.selectedArtists;
+
+    if (selectedArtists) {
+      room.selectedArtists = selectedArtists.filter((alreadySelected) => {
+        return alreadySelected.id !== artist.id;
+      });
     }
   }
 }

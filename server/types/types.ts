@@ -1,4 +1,4 @@
-import { Player } from "../../shared/types";
+import { Player, SearchForArtistItem } from "../../shared/types";
 
 // SOURCE: https://github.com/sdclarkelab/socket.io-countdown-timer
 export interface Room {
@@ -8,4 +8,5 @@ export interface Room {
   currentTime: number;
   isRunning: boolean;
   players: Player[];
+  selectedArtists: SearchForArtistItem[];
 }

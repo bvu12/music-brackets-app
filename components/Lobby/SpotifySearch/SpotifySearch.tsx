@@ -19,24 +19,26 @@ async function getSearchResults() {
 }
 
 interface SpotifySearchProps {
+  isRoomOwner: boolean;
   selectedArtists: SearchForArtistItem[];
   onClickAddArtist: (artist: SearchForArtistItem) => void;
   onClickRemoveArtist: (artist: SearchForArtistItem) => void;
 }
 
 export const SpotifySearch = ({
+  isRoomOwner,
   selectedArtists,
   onClickAddArtist,
   onClickRemoveArtist,
 }: SpotifySearchProps) => {
   const [searchString, setSearchString] = useDebouncedState("", 400);
-  const [searchResults, setSearchResults] = useState<SearchForArtist>();
+  const [searchResults, setSearchResults] = useState<SearchForArtistItem[]>();
 
   // On user search, get results from API
   useEffect(() => {
     if (searchString) {
       getSearchResults().then((results: SearchForArtist) => {
-        setSearchResults(results);
+        setSearchResults(results.artists.items);
       });
     }
   }, [searchString]);
@@ -51,13 +53,21 @@ export const SpotifySearch = ({
           style={{ flex: 1 }}
           onChange={(event) => setSearchString(event.currentTarget.value)}
         />
-        {searchResults && (
+        {isRoomOwner && searchResults && (
           <SpotifyBannerSearch
+            isRoomOwner={isRoomOwner}
             searches={searchResults}
             onClick={onClickAddArtist}
           />
         )}
-        {selectedArtists && (
+        {!isRoomOwner && selectedArtists && (
+          <SpotifyBannerSearch
+            isRoomOwner={isRoomOwner}
+            searches={selectedArtists}
+            onClick={onClickAddArtist}
+          />
+        )}
+        {isRoomOwner && selectedArtists && (
           <SelectedArtists
             artists={selectedArtists}
             onClick={onClickRemoveArtist}
