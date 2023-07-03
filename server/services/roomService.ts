@@ -1,134 +1,132 @@
-import { Room } from "../types/types";
-import { Player, SearchForArtistItem } from "../../shared/types";
+import { LinkedList, Room, Node } from "../types/types";
+import {
+  Player,
+  SearchForArtistItem,
+  roomIdToRoomObjDict,
+} from "../../shared/types";
 import { Socket } from "socket.io";
+import { playerService } from "./playerService";
+
+const TIMER_DEFAULT_SECONDS = 10;
 
 export module roomService {
-  export function getRoomId(socket: Socket): string {
-    return Array.from(socket.rooms).slice(-1)[0];
+  export function createRoom(
+    roomId: string,
+    adminId: string,
+    listOfPlayers: LinkedList<Player>
+  ): Room {
+    const room = {
+      roomId: roomId,
+      admin: adminId,
+      duration: TIMER_DEFAULT_SECONDS,
+      timerId: undefined,
+      currentTime: 0,
+      isRunning: false,
+      players: listOfPlayers,
+      selectedArtists: [],
+    };
+    return room;
   }
 
-  export function findRoomByRoomId(
-    rooms: Room[],
-    givenRoomId: string
+  export function getRoom(
+    rooms: roomIdToRoomObjDict,
+    roomId: string
   ): Room | null {
-    for (let room of rooms) {
-      var roomId = room.roomId;
-      if (roomId === givenRoomId) {
-        return room;
-      }
-    }
-
-    return null;
+    return rooms[roomId];
   }
 
-  export function findRoomBySocket(rooms: Room[], socket: Socket): Room | null {
-    const roomId: string = getRoomId(socket);
+  export function addPlayerToRoom(room: Room, socket: Socket): Node<Player> {
+    var players = room.players;
 
-    return findRoomByRoomId(rooms, roomId);
+    const player = playerService.createPlayer(
+      socket.id,
+      "Player" + playerService.getNextUsername(players)
+    );
+
+    const newPlayer = players.append(player);
+
+    return newPlayer;
   }
 
-  export function removeRoomBySocket(rooms: Room[], socket: Socket): Room[] {
-    const roomId: string = getRoomId(socket);
-
-    return rooms.filter((room) => room.roomId !== roomId);
-  }
-
-  export function addPlayerToRoom(rooms: Room[], socket: Socket) {
-    var players = _getPlayersInRoom(rooms, socket);
-
-    if (players) {
-      const newPlayer: Player = {
-        playerSocketId: socket.id,
-        username: _getNextUsername(players),
-        isRoomOwner: false,
-      };
-
-      players.push(newPlayer);
-
-      return newPlayer;
-    }
-  }
-
-  export function removePlayerFromRoom(room: Room, player: Player) {
+  export function removePlayerFromRoom(
+    rooms: roomIdToRoomObjDict,
+    room: Room,
+    playerToDelete: Node<Player>
+  ): Room {
     let players = room.players;
 
-    const index = players.indexOf(player);
-    if (index > -1) {
-      players.splice(index, 1);
+    players.delete(playerToDelete);
+
+    if (_isPlayerAdmin(room, playerToDelete)) {
+      _setNewRoomOwner(rooms, room);
     }
-    players = _setNewRoomOwner(players);
-    // TODO: Remove room from rooms if there are no more players
-    return players;
+
+    return rooms[room.roomId];
   }
 
-  export function editPlayerUsername(
-    rooms: Room[],
-    socket: Socket,
-    socketId: string,
-    desiredUsername: string
-  ) {
-    var players = _getPlayersInRoom(rooms, socket);
-    if (players) {
-      for (let player of players) {
-        var playerId = player.playerSocketId;
-        if (playerId === socketId) {
-          player.username = desiredUsername;
-        }
-      }
-    }
-  }
+  // export function editPlayerUsername(
+  //   rooms: Room[],
+  //   socket: Socket,
+  //   socketId: string,
+  //   desiredUsername: string
+  // ) {
+  //   var players = _getPlayersInRoom(rooms, socket);
+  //   if (players) {
+  //     for (let player of players) {
+  //       var playerId = player.playerSocketId;
+  //       if (playerId === socketId) {
+  //         player.username = desiredUsername;
+  //       }
+  //     }
+  //   }
+  // }
 
-  export function addArtistToRoom(
-    rooms: Room[],
-    socket: Socket,
-    artist: SearchForArtistItem
-  ) {
-    const room = roomService.findRoomBySocket(rooms, socket);
-    const selectedArtists = room?.selectedArtists;
+  // export function addArtistToRoom(
+  //   rooms: Room[],
+  //   socket: Socket,
+  //   artist: SearchForArtistItem
+  // ) {
+  //   const room = roomService.findRoomBySocket(rooms, socket);
+  //   const selectedArtists = room?.selectedArtists;
 
-    // Only add if not already in the list
-    if (
-      selectedArtists &&
-      !selectedArtists.some(
-        (alreadySelected) => alreadySelected.id === artist.id
-      )
-    ) {
-      room.selectedArtists = [...selectedArtists, artist];
-    }
-  }
+  //   // Only add if not already in the list
+  //   if (
+  //     selectedArtists &&
+  //     !selectedArtists.some(
+  //       (alreadySelected) => alreadySelected.id === artist.id
+  //     )
+  //   ) {
+  //     room.selectedArtists = [...selectedArtists, artist];
+  //   }
+  // }
 
-  export function removeArtistFromRoom(
-    rooms: Room[],
-    socket: Socket,
-    artist: SearchForArtistItem
-  ) {
-    const room = roomService.findRoomBySocket(rooms, socket);
-    const selectedArtists = room?.selectedArtists;
+  // export function removeArtistFromRoom(
+  //   rooms: Room[],
+  //   socket: Socket,
+  //   artist: SearchForArtistItem
+  // ) {
+  //   const room = roomService.findRoomBySocket(rooms, socket);
+  //   const selectedArtists = room?.selectedArtists;
 
-    if (selectedArtists) {
-      room.selectedArtists = selectedArtists.filter((alreadySelected) => {
-        return alreadySelected.id !== artist.id;
-      });
-    }
+  //   if (selectedArtists) {
+  //     room.selectedArtists = selectedArtists.filter((alreadySelected) => {
+  //       return alreadySelected.id !== artist.id;
+  //     });
+  //   }
+  // }
+}
+
+function _setNewRoomOwner(rooms: roomIdToRoomObjDict, room: Room) {
+  const players = room.players;
+
+  const head = players.getHead();
+  if (head) {
+    room.admin = head.data!.playerSocketId;
+  } else {
+    delete rooms[room.roomId];
   }
 }
 
-function _getPlayersInRoom(rooms: Room[], socket: Socket) {
-  const room = roomService.findRoomBySocket(rooms, socket);
-  var players = room?.players;
-  return players;
-}
-
-function _getNextUsername(players: Player[]): string {
-  const len = players.length;
-  return "Player " + (len + 1).toString();
-}
-
-function _setNewRoomOwner(players: Player[]): Player[] {
-  // Post-delete, owner is set based on join time
-  if (players.length > 0) {
-    players[0].isRoomOwner = true;
-  }
-
-  return players;
+function _isPlayerAdmin(room: Room, player: Node<Player>): boolean {
+  return room.admin === player.data?.playerSocketId;
 }

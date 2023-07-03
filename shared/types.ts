@@ -1,14 +1,22 @@
-import { Room } from "../server/types/types";
+import { Node, Room } from "../server/types/types";
 
-export interface Player {
+export interface roomIdToRoomObjDict {
+  [room_id: string]: Room;
+}
+
+export class Player {
   playerSocketId: string;
   username: string;
-  isRoomOwner: boolean;
+
+  constructor(playerSocketId: string, username: string) {
+    this.playerSocketId = playerSocketId;
+    this.username = username;
+  }
 }
 
 export interface PlayerToRoomDict {
   [socketId: string]: {
-    player: Player;
+    player: Node<Player>;
     room: Room;
   };
 }
